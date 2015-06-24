@@ -32,7 +32,8 @@ PlayerState {coordinates = [(20,0)],
 
 
 update:: Input -> GameState -> GameState
-update input game = if state game then GameState {state = (fst (input !! 2) == 0), players = players'} else  if snd (input !! 2)  <= 0 then GameState {state = (input !! 2)  ==(-1,-1) , players = players game} else defaultGame -- redundent and ugly
+update input game =
+  if state game then GameState {state = (fst (input !! 2) == 0), players = players'} else if snd (input !! 2) == 1 then defaultGame else GameState {state = (input !! 3) == (-1, -1), players = players game} -- redundent and ugly
   where players' = zipWith (updatePlayer (players game)) input (players game)
 
 --update a players status
@@ -75,28 +76,40 @@ render :: GameState  -> (Int, Int) -> Element
 render game (w, h)  =
   if state game then centeredCollage w h (back:(concatMap playerForm (players game))) else centeredCollage w h pauseScreen  -- ++ others-- ++ $map shotForm survivors --(\pState -> playerForm pState) survivors--do i even need the lambda?
     where back1 = gradient grad $ square 750
-          back = group [back1,rotate 1.571 back1]
-          grad = radial (0,0) 20 (100,100) 20 [(0, blue),(1, navy)]
-          pauseScreen = [im,(gradient (linear (0,0) (100,100) [(0, maroon),(1, teal)])  $ ngon 8 200),move (0, -125) (filled red $ oval 50 30),rotate 1 (move (70, 60) eye), rotate 2.3 (move (-70, 60) eye)]
-          txt =blank -- toForm $ Text.text $Text.toText $unlines ["Start - Down+Right"," ","Reset - Tab"," ", "Pause - space"] -- Text{textUTF8 = "Start = Down+Right, Reset = Tab, Pause = space", textColor = lime} -- , fontSize = 30, fontWeight =10, fontSlant = FontSlantOblique
-          im = move(-300,-350) (toForm (fittedImage 750 750 "wings.png"))
+back = group [back1, rotate 1.571 back1] --  move(-380,-380) (toForm (image w h "blueback.png"))
+grad = radial (300, 300) 20 (0, 0) 20 [(0, teal), (1, navy)]
+pauseScreen = [im, im3, (gradient (linear (0, 0) (100, 100) [(0, maroon), (1, teal)]) $ ngon 8 200), move (0, -125) (filled red $ oval 50 30), rotate 1 (move (70, 50) eye), rotate 2.3 (move (-70, 50) eye), mouth]
+txt = blank--move(0,300) $ toForm $ Text.text $Text.toText $unlines ["Space - Start/Pause"," "," ","Tab -Reset"] -- Text{textUTF8 = "Start = Down+Right, Reset = Tab, Pause = space", textColor = lime} -- , fontSize = 30, fontWeight =10, fontSlant = FontSlantOblique
+im = move(-400, -350) (toForm (image w h "tri.png"))
+--make these blanks to remove pause face
+mouth = move(-40, 80) (toForm (image 100 100 "mouth.png"))
+im3 = move(-375, -175) (toForm (image 750 750 "bear.png"))-- TODO: decide to save or not
           eye = (filled white $oval 35 80)
-          --          survivors = filter (\pState -> alive pState) (players game) endScreen
+-- i guess it's kinda stupid to compose a screen of several overlaying images... consider saving the image of the head/whole pause screen and rendering it as a single
+-- survivors = filter (\pState -> alive pState) (players game) endScreen
 
 
 gameSignal :: FRP.Helm.Signal GameState
 gameSignal = foldp update defaultGame input
   where input = lift2 processKeys Keyboard.keysDown (Time.fps 40)
-        processKeys keys t = [(x,y), (z,w),(s,s)] --terrible function
+        processKeys keys t = [(x, y), (z, w), (s, s), (r, r)] --terrible function(bigass array)
           where
-            [x, y, z, w, s] = map process controlKeys
-            controlKeys = [(Keyboard.LeftKey, Keyboard.RightKey),(Keyboard.UpKey,Keyboard.DownKey),(Keyboard.AKey,Keyboard.DKey),(Keyboard.WKey ,Keyboard.SKey),(Keyboard.SpaceKey, Keyboard.TabKey)]
+            [x, y, z, w, s, r] = map process controlKeys
+            controlKeys = [(Keyboard.LeftKey, Keyboard.RightKey),
+             (Keyboard.UpKey, Keyboard.DownKey),
+              (Keyboard.AKey, Keyboard.DKey),
+               (Keyboard.WKey, Keyboard.SKey),
+               (Keyboard.SpaceKey, Keyboard.TabKey),
+                (Keyboard.ReturnKey, Keyboard.ReturnKey)]
             process (key1, key2)
               |key1 `elem` keys  = -1
               |key2 `elem` keys = 1
               |otherwise = 0
 
--- TODO: this is crap, instead of saving every (x,y) save every nth pair and for the other use a last coordinate field, where in the form func chain the field to the coordinates -- THIS WOULD ELIMINATE THE WIGGLING MOTIONS
+-- TODO: this is KindaCrap,
+-- instead of saving every (x,y) save every nth pair(add a counter and  a prevP = (x,y)(so the next coord would be correct) )
+--  and for the other use a last coordinate field, where in the form func chain the field to the coordinates
+--  THIS WOULD ELIMINATE THE WIGGLING MOTIONS--------------------------------------------------------------------------------
 every n xs = case drop (n - 1) xs of
               (y:ys) -> y : every n ys
               [] -> []
