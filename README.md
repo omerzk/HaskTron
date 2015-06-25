@@ -1,6 +1,6 @@
 # HaskTron
 
-![Alt text](./open.png "Opening Screen")
+![Alt text](./src/open.png "Opening Screen")
 
 HaskTron is an implementation of tron in Haskell using Helm as it's game engine .
 
