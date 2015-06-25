@@ -16,7 +16,7 @@ currently I'm dealing with a few issues holding this game back:
 
 
 ### Version
-0.0.0
+0.0.1
 
 ### Tech
 
