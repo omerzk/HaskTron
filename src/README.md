@@ -1,17 +1,18 @@
 # HaskTron
 
+![Alt text](./open.png "Opening Screen")
+
 HaskTron is an implementation of tron in Haskell using Helm as it's game engine .
 
-  - Functional reactive programming imatating elm's style
+  - Functional reactive programming imitating elm's style
   - Simple game design open to massive extension
-  -
 
 
 currently I'm dealing with a few issues holding this game back:
 
-> an abnoraml amount of cpu(80%+ on the main game screen) usage, most likely stemming > from the engine itself.
+> an abnormal amount of cpu (80%+ on the main game screen) used, most likely stemming  from the engine itself.
 > 
-> dynamically linked lib's/dependencies prevent the game from running/compiling on > > most machines 
+> dynamically linked lib's/dependencies prevent the game from running/compiling on most machines
 
 
 ### Version
@@ -28,29 +29,18 @@ HaskTron uses the following open source projects to work properly:
 ```sh
 $ git clone [git-repo-url] HaskTron
 $ cd HaskTron
-$ npm i -d
-$ mkdir -p public/files/{md,html,pdf}
-$ gulp build --prod
-$ NODE_ENV=production node app
+$ no idea yet - resolve dependencies somehow
+
 ```
 
-
-### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantanously see your updates!
-
-Open your favorite Terminal and run these commands.
 
 
 ### Todo's
 
-- web multiplayer
+- web multi-player
 - debug cpu usage
 - smarter rendering
-- decide ,clean-up excess code
+- decisions ,clean-up excess code
 
 
 License
@@ -59,6 +49,6 @@ License
 Mine!
 
 
-**Free Software, Hell Yeah!**
+**I don’t want to live in a world where someone else makes the world a better place better than we do.**
 
 [Helm]:http://helm-engine.org/
