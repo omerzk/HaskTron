@@ -6,11 +6,12 @@ import qualified FRP.Helm.Keyboard as Keyboard
 import qualified FRP.Helm.Time as Time
 import qualified FRP.Helm.Text as Text
 
-
+-- record structures representing a:
 data PlayerState = PlayerState {coordinates::[(Double,Double)], color :: Color, alive :: Bool, prevX::Double, prevY::Double, inptInd::Int}
 data GameState = GameState {state::Bool, players::[PlayerState]}
 type Input = [(Int, Int)]
 
+--player speed
 speed::Double
 speed = 4
 
@@ -34,8 +35,10 @@ PlayerState {coordinates = [(20,0)],
 
 -- The response funcion which creates a new game state based on the input signal thus continuing the game signal
 update:: Input -> GameState -> GameState
-update input game =
-  if state game then GameState {state = (fst (input !! 2) == 0), players = players'} else if snd (input !! 2) == 1 then defaultGame else GameState {state = (input !! 3) == (-1, -1), players = players game} -- redundent and ugly
+update input game
+  | state game = GameState {state = (fst (input !! 2) == 0), players = players'}
+  | snd (input !! 2) == 1  = defaultGame
+  | otherwise = GameState {state = (input !! 3) == (-1, -1), players = players game}
   where players' = zipWith (updatePlayer (players game)) input (players game)
 
 --update a players status
@@ -83,12 +86,12 @@ render game (w, h)  =
           grad = radial (300, 300) 20 (0, 0) 20 [(0, blue), (1, navy)]
           pauseScreen = [im, im3, (gradient (linear (0, 0) (100, 100) [(0, maroon), (1, teal)]) $ ngon 8 200), move (0, -125) (filled red $ oval 50 30), eyer, eyel, mouth, txt]
           txt =blank --move(0,300) $ toForm $ Text.text $Text.toText $unlines ["Space - Start/Pause"," "," ","Tab -Reset"] -- Text{textUTF8 = "Start = Down+Right, Reset = Tab, Pause = space", textColor = lime} -- , fontSize = 30, fontWeight =10, fontSlant = FontSlantOblique
-          im = move(-400, -350) (toForm (image w h "tri.png"))
+          im = move(-400, -350) (toForm (image w h "../res/tri.png"))
 --make these blanks to remove pause face
-  mouth = move(-40, 80) (toForm (image 100 100 "mouth.png"))
-          im3 = blank -- move(-375, -175) (toForm (image 750 750 "bear.png"))
-          eyer = move(25, -10) (toForm (image 80 80 "eyer.png"))
-          eyel = move(-110, -10) (toForm (image 80 80 "eyes.png"))
+mouth = move(-40, 80) (toForm (image 100 100 "../res/mouth.png"))
+          im3 = blank -- move(-375, -175) (toForm (image 750 750 "../res/bear.png"))
+          eyer = move(25, -10) (toForm (image 80 80 "../res/eyer.png"))
+          eyel = move(-110, -10) (toForm (image 80 80 "../res/eyes.png"))
 -- i guess it's kinda stupid to compose a screen of several overlaying images... consider saving the image of the head/whole pause screen and rendering it as a single
 --survivors = filter (\pState -> alive pState) (players game) endScreen
 --eye = (filled white $oval 35 80)
