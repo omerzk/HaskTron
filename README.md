@@ -27,7 +27,7 @@ HaskTron uses the following open source projects to work properly:
 ### Installation
 
 ```sh
-$ git clone [git-repo-url] HaskTron
+$ git clone https://github.com/omerzk/HaskTron.git HaskTron
 $ cd HaskTron
 $ no idea yet - resolve dependencies somehow
 
@@ -52,4 +52,3 @@ Mine!
 **I don’t want to live in a world where someone else makes the world a better place better than we do.**
 
 [Helm]:http://helm-engine.org/
-[git-repo-url]:https://github.com/omerzk/HaskTron.git
