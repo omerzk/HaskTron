@@ -29,10 +29,11 @@ HaskTron uses the following open source projects to work properly:
 ```sh
 $ git clone https://github.com/omerzk/HaskTron.git HaskTron
 $ cd HaskTron
-$ no idea yet - resolve dependencies somehow
-
+$ cabal install helm
+$ runhaskell Setup configure
+$ runhaskell Setup build
 ```
-
+>in my experience helm's installation is trying, have fun.
 
 
 ### Todo's
